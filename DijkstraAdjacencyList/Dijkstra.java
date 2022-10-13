@@ -1,7 +1,7 @@
 package helloWorld;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
-import java.util.Comparator;
+import java.util.Scanner;
+import java.util.Random;
 
 public class Dijkstra {
 	
@@ -159,7 +159,6 @@ public class Dijkstra {
 			for(int i=0; i<vertices; i++) {
 				Edge e = new Edge(i, d[i]);
 				q.insert(e);
-				
 			}
 			
 			while(q.size>0) {
@@ -177,7 +176,6 @@ public class Dijkstra {
 						 q.inserted(vertex, d[vertex]);
 					 }
 				 }
-				 
 			}
 			printDijkstra(d, pi, start);
 		}
@@ -188,41 +186,58 @@ public class Dijkstra {
 				 " distance: " + d[i] + " previous: " + pi[i].destination);
 			}
 		}
+		
+		//adding the random edges based on the vertices
+		public void randEdges(int vertices, int edges) {
+			Random rand = new Random();
+			//ensure the graph is connected with V-1 edges
+			for(int i = 0; i<vertices-1; i++) {
+				if(i!=vertices-1) {
+					addEdge(i, i+1, rand.nextInt(1, 10));
+				}
+				else {
+					addEdge(i, 0, rand.nextInt(1, 10));
+				}
+				
+			}
+			//generate random edges, assuming no repeats
+			for(int i=0; i<(edges-vertices+1); i++) {
+				int equals, first, second;
+				do{
+					equals = 0;
+					first = rand.nextInt(0, vertices);
+					second = rand.nextInt(0, vertices);
+					if(first == second) {
+						equals = 1;
+					}
+					for(int x = 0; x<adjList[first].size(); x++) {
+						if(adjList[first].get(x).destination == second) {
+							equals = 1;
+						}
+					}
+					for(int x = 0; x<adjList[second].size(); x++) {
+						if(adjList[second].get(x).destination == first) {
+							equals = 1;
+						}
+					}
+				}while(equals == 1);
+				addEdge(first, second, rand.nextInt(1, 10));	
+			}
+			
+		}
 	}
 	
 	
 	
 	
 	public static void main(String[] args) {
-		 int vertices = 9;
-		 Graph graph = new Graph(vertices);
-		 graph.addEdge(0, 1, 4);
-		 graph.addEdge(0, 7, 8);
-		 graph.addEdge(1, 2, 8);
-		 graph.addEdge(1, 7, 11);
-		 graph.addEdge(1, 0, 7);
-		 graph.addEdge(2, 1, 8);
-		 graph.addEdge(2, 3, 7);
-		 graph.addEdge(2, 8, 2);
-		 graph.addEdge(2, 5, 4);
-		 graph.addEdge(3, 2, 7);
-		 graph.addEdge(3, 4, 9);
-		 graph.addEdge(3, 5, 14);
-		 graph.addEdge(4, 3, 9);
-		 graph.addEdge(4, 5, 10);
-		 graph.addEdge(5, 4, 10);
-		 graph.addEdge(5, 6, 2);
-		 graph.addEdge(6, 5, 2);
-		 graph.addEdge(6, 8, 6);
-		 graph.addEdge(6, 7, 1);
-		 graph.addEdge(7, 0, 8);
-		 graph.addEdge(7, 1, 11);
-		 graph.addEdge(7, 6, 1);
-		 graph.addEdge(7, 8, 7);
-		 graph.addEdge(8, 2, 2);
-		 graph.addEdge(8, 6, 6);
-		 graph.addEdge(8, 7, 1);
-		 graph.dijkstraList(0);
+		int vertices = 1000;
+		Graph graph = new Graph(vertices);
+		graph.randEdges(vertices, 999);
+		long startTime = System.currentTimeMillis();
+		graph.dijkstraList(0);
+		long elapsedTime = System.currentTimeMillis() - startTime;
+		System.out.println("Time in ms: " + elapsedTime );
 	}
 
 }

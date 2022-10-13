@@ -193,18 +193,19 @@ public class Dijkstra {
 			//ensure the graph is connected with V-1 edges
 			for(int i = 0; i<vertices-1; i++) {
 				if(i!=vertices-1) {
-					addEdge(i, i+1, rand.nextInt(1, 10));
+					addEdge(i, i+1, rand.nextInt(1, 6));
 				}
 				else {
-					addEdge(i, 0, rand.nextInt(1, 10));
+					addEdge(i, 0, rand.nextInt(1, 6));
 				}
 				
 			}
 			//generate random edges, assuming no repeats
 			for(int i=0; i<(edges-vertices+1); i++) {
-				int equals, first, second;
+				int equals, first, second, same;
 				do{
 					equals = 0;
+					same = 0;
 					first = rand.nextInt(0, vertices);
 					second = rand.nextInt(0, vertices);
 					if(first == second) {
@@ -212,16 +213,19 @@ public class Dijkstra {
 					}
 					for(int x = 0; x<adjList[first].size(); x++) {
 						if(adjList[first].get(x).destination == second) {
-							equals = 1;
+							same++;
 						}
 					}
 					for(int x = 0; x<adjList[second].size(); x++) {
 						if(adjList[second].get(x).destination == first) {
-							equals = 1;
+							same++;
 						}
 					}
+					if(same == 2) {
+						equals = 1;
+					}
 				}while(equals == 1);
-				addEdge(first, second, rand.nextInt(1, 10));	
+				addEdge(first, second, rand.nextInt(1, vertices+1));	
 			}
 			
 		}
@@ -231,13 +235,13 @@ public class Dijkstra {
 	
 	
 	public static void main(String[] args) {
-		int vertices = 1000;
+		int vertices = 5000;
 		Graph graph = new Graph(vertices);
-		graph.randEdges(vertices, 999);
-		long startTime = System.currentTimeMillis();
+		graph.randEdges(vertices,12497500);
+		long startTime = System.nanoTime();
 		graph.dijkstraList(0);
-		long elapsedTime = System.currentTimeMillis() - startTime;
-		System.out.println("Time in ms: " + elapsedTime );
+		long elapsedTime = System.nanoTime() - startTime;
+		System.out.println("Time in ms: " + elapsedTime/1000);
 	}
 
 }
